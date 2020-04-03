@@ -13,7 +13,8 @@ NCL='\e[0m'
 # Outputs
 mss() { printf "${CYA}%s${NCL}" "$1"; }
 war() { printf "${YEL}%s${NCL}" "$1"; }
-err() { printf "${RED}%s${NCL}" "$1"; return 1; }
+errmsg() { printf "${RED}%s${NCL}" "$1"; } 
+err() { errmsg "$1"; return 1; }
 
 # Everybody like faster updates
 rankMirrors() {
@@ -85,22 +86,17 @@ removeUseless() {
 }
 
 
-
 # Update mirrors before anything else
 sudo apt -y update && sudo apt -y install curl
 rankMirrors && sudo apt -y update
 
 # Install dialog to choose some stuff
-sudo apt -y install dialog
+sudo apt -y install dialog || { errmsg "Cannot go on without dialog"; exit 1; }
+
+# Welcome screen
+dialog --backtitle "os-setup" --title "Welcome!" --msgbox "Welcome to this wizard-ish installer.\\nThis script will guide you, so just relax and let me guide you.\\n\\n\\nValerio Casalino" 10 60
 
 # Terminal emulator choice
-teChoice=$(dialog --clear \
-  --backtitle "setup-os" \
-  --title "Terminal Emulator" \
-  --menu "Choose one of the following:" \
-  15 40 4 \
-  xterm "Minimal terminal for the X system, with custom settings" \
-  alacritty "Blazing fast terminal emulator written in Rust" \
-  xfce4-terminal "Default for the xfce desktop environment" \
-  3>&1 1>&2 2>&3 3>&1 )
+teChoice=$(dialog --clear --backtitle "os-setup" --title "Terminal Emulator" --menu "Choose one of the following:" 15 40 4 xterm "Minimal terminal for the X system, with custom settings" alacritty "Blazing fast terminal emulator written in Rust" xfce4-terminal "Default for the xfce desktop environment" 3>&1 1>&2 2>&3 3>&1 )
+
 
