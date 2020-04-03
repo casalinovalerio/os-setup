@@ -36,27 +36,27 @@ rankMirrors() {
 }
 
 # Install nerd fonts... It will require a while
-installFonts() {
+installNerdFonts() {
   out=$( mktemp -d )
   git clone https://github.com/ryanoasis/nerd-fonts.git "$out"
   /usr/bin/env bash -c "$out/install.sh --complete" && rm -rf "$out" || war "Fonts not installed correctly"
 }
 
 # Use the .zshrc in the repository
-setupZsh() {
+installZsh() {
   sudo apt -y install zsh zsh-syntax-highlighting zsh-theme-powerlevel9k || err "zsh not installed"
   cp ./resources/.zshrc "$HOME"
 }
 
 # Use alacritty.yml in the repository
-setupTerminalEmulatorAlacritty() {
+installAlacritty() {
   sudo apt -y install alacritty || err "Unable to install alacritty"
   mkdir -p "$HOME/.config/alacritty"
   cp ./resources/alacritty.yml "$HOME/.config/alacritty"
 }
 
 # Use xterm as default?
-setupTerminalEmulatorXterm() {
+installXterm() {
   sudo apt -y install xterm || err "Unable to install xterm"
   cp ./resources/.Xresources "$HOME" && printf "Restart (or logout) required"
 }
@@ -73,6 +73,16 @@ installXfce() {
   dpkg -l | grep xfce4-session || { sudo apt -y install xfce4 || err "Couldn't install xfce4"; }
   xfce4-panel-profiles load ./resources/xfce4/panel.tar.bz2
   cp ./resources/xfce4/xfce4-keyboard-shortcuts.xml "$HOME/.config/xfce4/xfce-perchannel-xml/"
+}
+
+# Commands from https://brave-browser.readthedocs.io/en/latest/installing-brave.html#linux
+installBrave() { 
+  sudo apt -y install apt-transport-https curl || err "Failed to get pre-requisites for brave"
+  curl -s https://brave-browser-apt-release.s3.brave.com/brave-core.asc | sudo apt-key --keyring /etc/apt/trusted.gpg.d/brave-browser-release.gpg add - || err "Failed to add brave gpg signature"
+  echo "deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list || err "Failed to add brave to repository sources"
+  sudo apt -y update && sudo apt -y install brave-browser || err "Failed to apt install brave"
+  # Enable hardware acceleration
+  cp ./resources/chromium-flags.conf "$HOME/.config/brave-flags.conf"
 }
 
 removeUseless() {
@@ -100,7 +110,7 @@ dialog --backtitle "os-setup" --title "Mirrors update" --yesno "Do you wish to a
 desktopEnv=$(dialog --clear --backtitle "os-setup" --title "Desktop Environment" --menu "Choose one of the following:" 15 70 4 xfce4 "For now I support just this" gnome3 "Don't pick this (yet)" i3 "Don't pick this (yet)" 3>&1 1>&2 2>&3 3>&1)
 termEmulat=$(dialog --clear --backtitle "os-setup" --title "Terminal Emulator" --menu "Choose one of the following:" 15 70 4 xterm "Minimal terminal for the X system, with custom settings" alacritty "Blazing fast terminal emulator written in Rust" xfce4-terminal "Default for the xfce desktop environment" 3>&1 1>&2 2>&3 3>&1 )
 webBrowser=$(dialog --clear --backtitle "os-setup" --title "Web Browser" --menu "Choose one of the following:" 15 70 4 brave "Chromium-based, privacy focused browser" firefox "It's a classic, preinstalled" chromium "The open source browser de-facto standard" 3>&1 1>&2 2>&3 3>&1)
-programLst=$(dialog --clear --backtitle "os-setup" --title "Software" --checklist "Press space to mark a program for installation" 15 70 4 zsh+fonts "Install zsh and NerdFonts" vscode "Install Visual Studio Code (oss if possible)"  )
+programLst=$(dialog --clear --backtitle "os-setup" --title "Software" --checklist "Press space to mark a program for installation" 15 70 4 zsh+fonts "Install zsh and NerdFonts" vscode "Install Visual Studio Code (oss if possible)"   )
 
 # Greetings and goodbye!
 dialog --backtitle "os-setup" --title "Congratulation!" --msgbox "I hope you didn't have any problem,\\ncontact me for feature requests if you want\\n\\nEnjoy your system!" 10 70
