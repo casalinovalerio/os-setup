@@ -18,11 +18,7 @@ err() { errmsg "$1"; return 1; }
 
 # Everybody like faster updates
 rankMirrors() {
-  url=$( curl -s http://mirrors.ubuntu.com/mirrors.txt \
-    | xargs -n1 -I {} sh -c 'echo $(curl -r 0-102400 -s -w %{speed_download} -o /dev/null {}/ls-lR.gz) {}' \
-    | sort -gr \
-    | head -1 \
-    | cut -d" " -f2 )
+  url=$( curl -s http://mirrors.ubuntu.com/mirrors.txt | xargs -n1 -I {} sh -c 'echo $(curl -r 0-102400 -s -w %{speed_download} -o /dev/null {}/ls-lR.gz) {}' | sort -gr | head -1 | cut -d" " -f2 )
   codename=$( lsb_release -cs )
   printf "Backing up source list to /etc/apt/sources.list.bak\\nNew source list:"
   sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak || err "Failed to copy source list" 
@@ -72,6 +68,12 @@ installVScode() {
   sudo apt -y update && sudo apt -y install code || war "Unable to install VScode"
 }
 
+installXfce() {
+  dpkg -l | grep xfce4-session || { sudo apt -y install xfce4 || err "Couldn't install xfce4"; }
+  xfce4-panel-profiles load ./resources/xfce4/panel.tar.bz2
+  cp ./resources/xfce4/xfce4-keyboard-shortcuts.xml "$HOME/.config/xfce4/xfce-perchannel-xml/"
+}
+
 removeUseless() {
   sudo apt -y purge \
     transmission* \
@@ -79,7 +81,6 @@ removeUseless() {
     gnome-software \
     gimp \
     gnome-terminal \
-    xfce4-terminal \
     firefox
     # It is a long list, but can't remember now...
   sudo apt -y autoremove && sudo apt -y autoclean
