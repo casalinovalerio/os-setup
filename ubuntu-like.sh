@@ -47,16 +47,17 @@ installFonts() {
 # Use the .zshrc in the repository
 setupZsh() {
   sudo apt -y install zsh zsh-syntax-highlighting zsh-theme-powerlevel9k || err "zsh not installed"
-  # wget "https://..." -O "$HOME/.zshrc" || war "Config for zsh not downloaed properly"
+  cp ./resources/.zshrc "$HOME"
 }
 
 # Use alacritty.yml in the repository
 setupTerminalEmulatorAlacritty() {
   sudo apt -y install alacritty || err "Unable to install alacritty"
   mkdir -p "$HOME/.config/alacritty"
-  # wget "https://raw.githubusercontent...." -O "$HOME/.config/alacritty/alacritty.yml" || war "Config for alacritty not downloaed properly"
+  cp ./resources/alacritty.yml "$HOME/.config/alacritty"
 }
 
+# Use xterm as default?
 setupTerminalEmulatorXterm() {
   sudo apt -y install xterm || err "Unable to install xterm"
   cp ./resources/.Xresources "$HOME" && printf "Restart (or logout) required"
