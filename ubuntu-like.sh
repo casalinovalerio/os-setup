@@ -86,6 +86,21 @@ removeUseless() {
 
 
 
-
+# Update mirrors before anything else
 sudo apt -y update && sudo apt -y install curl
 rankMirrors && sudo apt -y update
+
+# Install dialog to choose some stuff
+sudo apt -y install dialog
+
+# Terminal emulator choice
+teChoice=$(dialog --clear \
+  --backtitle "setup-os" \
+  --title "Terminal Emulator" \
+  --menu "Choose one of the following:" \
+  15 40 4 \
+  xterm "Minimal terminal for the X system, with custom settings" \
+  alacritty "Blazing fast terminal emulator written in Rust" \
+  xfce4-terminal "Default for the xfce desktop environment" \
+  3>&1 1>&2 2>&3 3>&1 )
+
