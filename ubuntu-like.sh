@@ -91,12 +91,17 @@ removeUseless() {
 command -v dialog || { errmsg "Cannot go on without dialog"; exit 1; }
 
 # Welcome screen
-dialog --backtitle "os-setup" --title "Welcome!" --msgbox "Welcome to this wizard-ish installer.\\nThis script will guide you, so just relax and let me guide you.\\n\\n\\nValerio Casalino" 10 60
+dialog --backtitle "os-setup" --title "Welcome!" --msgbox "Welcome to this wizard-ish installer.\\nThis script will guide you, so just relax and let me guide you.\\n\\n\\nValerio Casalino" 10 70
 
 # Prompt to update mirrors
-dialog --backtitle "os-setup" --title "Mirrors update" --yesno "Do you wish to automatically update your mirrors?" 15 40 4 && clear && rankMirrors && sudo apt -y update && printf "\\n\\nMirrors Updated!\n" && sleep 2
+dialog --backtitle "os-setup" --title "Mirrors update" --yesno "Do you wish to automatically update your mirrors?" 15 70 && clear && rankMirrors && sudo apt -y update && printf "\\n\\nMirrors Updated!\n" && sleep 2
 
 # Choices
-termEmulaor=$(dialog --clear --backtitle "os-setup" --title "Terminal Emulator" --menu "Choose one of the following:" 15 40 4 xterm "Minimal terminal for the X system, with custom settings" alacritty "Blazing fast terminal emulator written in Rust" xfce4-terminal "Default for the xfce desktop environment" 3>&1 1>&2 2>&3 3>&1 )
-webBrowser=$(dialog --clear --backtitle "os-setup" --title "Web Browser" --menu "Choose one of the following:")
+desktopEnv=$(dialog --clear --backtitle "os-setup" --title "Desktop Environment" --menu "Choose one of the following:" 15 70 4 xfce4 "For now I support just this" gnome3 "Don't pick this (yet)" i3 "Don't pick this (yet)" 3>&1 1>&2 2>&3 3>&1)
+termEmulat=$(dialog --clear --backtitle "os-setup" --title "Terminal Emulator" --menu "Choose one of the following:" 15 70 4 xterm "Minimal terminal for the X system, with custom settings" alacritty "Blazing fast terminal emulator written in Rust" xfce4-terminal "Default for the xfce desktop environment" 3>&1 1>&2 2>&3 3>&1 )
+webBrowser=$(dialog --clear --backtitle "os-setup" --title "Web Browser" --menu "Choose one of the following:" 15 70 4 brave "Chromium-based, privacy focused browser" firefox "It's a classic, preinstalled" chromium "The open source browser de-facto standard" 3>&1 1>&2 2>&3 3>&1)
+programLst=$(dialog --clear --backtitle "os-setup" --title "Software" --checklist "Press space to mark a program for installation" 15 70 4 zsh+fonts "Install zsh and NerdFonts" vscode "Install Visual Studio Code (oss if possible)"  )
 
+# Greetings and goodbye!
+dialog --backtitle "os-setup" --title "Congratulation!" --msgbox "I hope you didn't have any problem,\\ncontact me for feature requests if you want\\n\\nEnjoy your system!" 10 70
+dialog --backtitle "os-setup" --title "Reboot?" --yesno "Do you wish to Reboot?\\n(some programs may need it)" 15 70 && systemctl reboot && clear || clear
