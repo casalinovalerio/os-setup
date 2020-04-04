@@ -85,18 +85,6 @@ installBrave() {
   cp ./resources/chromium-flags.conf "$HOME/.config/brave-flags.conf"
 }
 
-removeUseless() {
-  sudo apt -y purge \
-    transmission* \
-    libreoffice* \
-    gnome-software \
-    gimp \
-    gnome-terminal \
-    firefox
-    # It is a long list, but can't remember now...
-  sudo apt -y autoremove && sudo apt -y autoclean
-}
-
 # Install dialog to choose some stuff
 command -v dialog || { errmsg "Cannot go on without dialog"; exit 1; }
 
@@ -107,10 +95,44 @@ dialog --backtitle "os-setup" --title "Welcome!" --msgbox "Welcome to this wizar
 dialog --backtitle "os-setup" --title "Mirrors update" --yesno "Do you wish to automatically update your mirrors?" 15 70 && clear && rankMirrors && sudo apt -y update && printf "\\n\\nMirrors Updated!\n" && sleep 2
 
 # Choices
-desktopEnv=$(dialog --clear --backtitle "os-setup" --title "Desktop Environment" --menu "Choose one of the following:" 15 70 4 xfce4 "For now I support just this" gnome3 "Don't pick this (yet)" i3 "Don't pick this (yet)" 3>&1 1>&2 2>&3 3>&1)
-termEmulat=$(dialog --clear --backtitle "os-setup" --title "Terminal Emulator" --menu "Choose one of the following:" 15 70 4 xterm "Minimal terminal for the X system, with custom settings" alacritty "Blazing fast terminal emulator written in Rust" xfce4-terminal "Default for the xfce desktop environment" 3>&1 1>&2 2>&3 3>&1 )
+desktopEnv=$(dialog --clear --backtitle "os-setup" --title "Desktop Environment" --menu "Choose one of the following:" 15 70 4 current "Do not install any" xfce4 "For now I support just this" gnome3 "Don't pick this (yet)" i3 "Don't pick this (yet)" 3>&1 1>&2 2>&3 3>&1)
+termEmulat=$(dialog --clear --backtitle "os-setup" --title "Terminal Emulator" --menu "Choose one of the following:" 15 70 4 current "Do not install" xterm "Minimal terminal for the X system, with custom settings" alacritty "Blazing fast terminal emulator written in Rust" xfce4-terminal "Default for the xfce desktop environment" 3>&1 1>&2 2>&3 3>&1 )
 webBrowser=$(dialog --clear --backtitle "os-setup" --title "Web Browser" --menu "Choose one of the following:" 15 70 4 brave "Chromium-based, privacy focused browser" firefox "It's a classic, preinstalled" chromium "The open source browser de-facto standard" 3>&1 1>&2 2>&3 3>&1)
 programLst=$(dialog --clear --backtitle "os-setup" --title "Software" --checklist "Press space to mark a program for installation" 15 70 4 zsh+fonts "Install zsh and NerdFonts" vscode "Install Visual Studio Code (oss if possible)"   )
+
+# Actual changes (draft)
+dialog --clear --backtitle "os-setup" --infobox "Setting up desktop environment" 15 70 && sleep 2
+case "$desktopEnv" in
+  "current") ;;
+  "xfce") installXfce ;;
+  "gnome3") ;;
+  "i3") ;;
+  *) ;;
+esac
+
+dialog --clear --backtitle "os-setup" --infobox "Setting up terminal emulator" 15 70 && sleep 2
+case "$termEmulat" in
+  "current") ;;
+  "alacritty") installAlacritty ;;
+  "xterm") installXterm ;;
+  "xfce4-terminal") ;; # installXfceTerminal ;;
+  *) ;;
+esac
+
+dialog --clear --backtitle "os-setup" --infobox "Setting up web browser" 15 70 && sleep 2
+case "$webBrowser" in
+  "brave") clear; installBrave ;;
+  "firefox") clear; sudo apt -y install firefox ;;
+  "chromium") clear; sudo apt -y install chromium; cp ./resources/chromium-flags.conf "$HOME/.config/" ;;
+  *) ;;
+esac
+
+dialog --clear --backtitle "os-setup" --infobox "Installing additional software" 15 70 && sleep 2
+for soft in $programLst; do case "$soft" in
+  "zsh+fonts") clear; installZsh && installNerdFonts ;;
+  "vscode") clear; installVScode ;;
+  *) ;;
+esac done
 
 # Greetings and goodbye!
 dialog --backtitle "os-setup" --title "Congratulation!" --msgbox "I hope you didn't have any problem,\\ncontact me for feature requests if you want\\n\\nEnjoy your system!" 10 70
