@@ -13,9 +13,9 @@ RED='\e[31m'
 NCL='\e[0m'
 
 # Outputs
-mss() { printf "${CYA}%s${NCL}" "$1"; }
-war() { printf "${YEL}%s${NCL}" "$1"; }
-errmsg() { printf "${RED}%s${NCL}" "$1"; } 
+mss() { printf "${CYA}%s${NCL}\\n" "$1"; }
+war() { printf "${YEL}%s${NCL}\\n" "$1"; }
+errmsg() { printf "${RED}%s${NCL}\\n" "$1"; } 
 err() { errmsg "$1"; return 1; }
 
 ### Check if root
