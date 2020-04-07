@@ -114,9 +114,9 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 
 ### Source plugins
 ##################
-source "/usr/share/zsh-theme-powerlevel9k/powerlevel9k.zsh-theme"
-source "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "/usr/share/powerlevel9k/powerlevel9k.zsh-theme"
+source "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 ### Plugins variables
 #####################

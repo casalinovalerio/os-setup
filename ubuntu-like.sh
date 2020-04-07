@@ -44,7 +44,7 @@ installNerdFonts() {
 
 # Use the .zshrc in the repository
 installZsh() {
-  sudo apt -y install zsh zsh-syntax-highlighting zsh-theme-powerlevel9k || err "zsh not installed"
+  sudo apt -y install zsh zsh-syntax-highlighting zsh-autosuggestions zsh-theme-powerlevel9k || err "zsh not installed"
   cp ./resources/.zshrc "$HOME"
 }
 
