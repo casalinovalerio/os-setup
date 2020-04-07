@@ -18,6 +18,9 @@ war() { printf "${YEL}%s${NCL}" "$1"; }
 errmsg() { printf "${RED}%s${NCL}" "$1"; } 
 err() { errmsg "$1"; return 1; }
 
+### Check if root
+[ $EUID -ne 0 ] && errmsg "Please, run as root" && exit 1
+
 # Everybody like faster updates
 setMirrors() {
   printf "deb mirror://mirrors.ubuntu.com/mirrors.txt %s main restricted universe multiverse" "$UBUNTU_CODENAME" | tee /etc/apt/sources.list
