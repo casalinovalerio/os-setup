@@ -4,6 +4,8 @@
 ### Description:  Install basic software in ubuntu-like systems             ###
 ###############################################################################
 
+UBUNTU_CODENAME=$( lsb_release -cs )
+
 # Colors
 CYA='\e[36m'
 YEL='\e[1;33m'
@@ -17,22 +19,11 @@ errmsg() { printf "${RED}%s${NCL}" "$1"; }
 err() { errmsg "$1"; return 1; }
 
 # Everybody like faster updates
-rankMirrors() {
-  sudo apt -y update && sudo apt -y install curl || err "Unable to install curl, mirrors not updated"
-  url=$( curl -s http://mirrors.ubuntu.com/mirrors.txt | xargs -n1 -I {} sh -c 'echo $(curl -r 0-102400 -s -w %{speed_download} -o /dev/null {}/ls-lR.gz) {}' | sort -gr | head -1 | cut -d" " -f2 )
-  codename=$( lsb_release -cs )
-  printf "Backing up source list to /etc/apt/sources.list.bak\\nNew source list:"
-  sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak || err "Failed to copy source list" 
-  printf "deb %s %s main restricted\\n" "$url" "$codename" | sudo tee /etc/apt/sources.list
-  printf "deb %s %s-updates main restricted\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s universe\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s-updates universe\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s multiverse\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s-updates multiverse\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s-backports main restricted universe multiverse\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s-security main restricted\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s-security universe\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
-  printf "deb %s %s-security multiverse\\n" "$url" "$codename" | sudo tee -a /etc/apt/sources.list
+setMirrors() {
+  printf "deb mirror://mirrors.ubuntu.com/mirrors.txt %s main restricted universe multiverse" "$UBUNTU_CODENAME" | tee /etc/apt/sources.list
+  printf "deb mirror://mirrors.ubuntu.com/mirrors.txt %s-updates main restricted universe multiverse" "$UBUNTU_CODENAME" | tee -a /etc/apt/sources.list
+  printf "deb mirror://mirrors.ubuntu.com/mirrors.txt %s-backports main restricted universe multiverse" "$UBUNTU_CODENAME" | tee -a /etc/apt/sources.list
+  printf "deb mirror://mirrors.ubuntu.com/mirrors.txt %s-security main restricted universe multiverse" "$UBUNTU_CODENAME" | tee -a /etc/apt/sources.list
 }
 
 # Install nerd fonts... It will require a while
@@ -93,7 +84,7 @@ command -v dialog || { errmsg "Cannot go on without dialog"; exit 1; }
 dialog --backtitle "os-setup" --title "Welcome!" --msgbox "Welcome to this wizard-ish installer.\\nThis script will guide you, so just relax and let me guide you.\\n\\n\\nValerio Casalino" 10 70
 
 # Prompt to update mirrors
-dialog --backtitle "os-setup" --title "Mirrors update" --yesno "Do you wish to automatically update your mirrors?" 15 70 && clear && rankMirrors && sudo apt -y update && printf "\\n\\nMirrors Updated!\n" && sleep 2
+dialog --backtitle "os-setup" --title "Mirrors update" --yesno "Do you wish to automatically update your mirrors?" 15 70 && clear && setMirrors && sudo apt -y update && printf "\\n\\nMirrors Updated!\n" && sleep 2
 
 # Choices
 desktopEnv=$(dialog --clear --backtitle "os-setup" --title "Desktop Environment" --menu "Choose one of the following:" 15 70 4 current "Do not install any" xfce4 "For now I support just this" gnome3 "Don't pick this (yet)" i3 "Don't pick this (yet)" 3>&1 1>&2 2>&3 3>&1)
