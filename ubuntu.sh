@@ -4,15 +4,16 @@
 ### Description:  Install basic software in ubuntu-like systems             ###
 ###############################################################################
 
+### Global variables
 UBUNTU_CODENAME=$( lsb_release -cs )
 
-# Colors
+### Output colors
 CYA='\e[36m'
 YEL='\e[1;33m'
 RED='\e[31m'
 NCL='\e[0m'
 
-# Outputs
+### Outputs functions
 mss() { printf "${CYA}%s${NCL}\\n" "$1"; }
 war() { printf "${YEL}%s${NCL}\\n" "$1"; }
 errmsg() { printf "${RED}%s${NCL}\\n" "$1"; } 
@@ -21,7 +22,8 @@ err() { errmsg "$1"; return 1; }
 ### Check if root
 [ $EUID -ne 0 ] && errmsg "Please, run as root" && exit 1
 
-# Everybody like faster updates
+### Functions
+# Apt mirror:// method to get apt choose the best mirror
 setMirrors() {
   printf "deb mirror://mirrors.ubuntu.com/mirrors.txt %s main restricted universe multiverse" "$UBUNTU_CODENAME" | tee /etc/apt/sources.list
   printf "deb mirror://mirrors.ubuntu.com/mirrors.txt %s-updates main restricted universe multiverse" "$UBUNTU_CODENAME" | tee -a /etc/apt/sources.list
@@ -36,7 +38,7 @@ installNerdFonts() {
   /usr/bin/env bash -c "$out/install.sh --complete" && rm -rf "$out" || war "Fonts not installed correctly"
 }
 
-# Use the .zshrc in the repository
+# Zsh workflow
 installZsh() {
   sudo apt -y install zsh zsh-syntax-highlighting zsh-autosuggestions zsh-theme-powerlevel9k || err "zsh not installed"
   cp ./resources/.zshrc "$HOME"
@@ -56,6 +58,7 @@ installXterm() {
   cp ./resources/.Xresources "$HOME" && printf "Restart (or logout) required"
 }
 
+# Visual Studio Code installation
 installVScode() {
   sudo apt -y install apt-transport-https
   curl -s "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor > /tmp/packages.microsoft.gpg
@@ -64,6 +67,7 @@ installVScode() {
   sudo apt -y update && sudo apt -y install code || war "Unable to install VScode"
 }
 
+# xfce4 with some customizations
 installXfce() {
   dpkg -l | grep xfce4-session || { sudo apt -y install xfce4 || err "Couldn't install xfce4"; }
   xfce4-panel-profiles load ./resources/xfce4/panel.tar.bz2
@@ -80,6 +84,7 @@ installBrave() {
   cp ./resources/chromium-flags.conf "$HOME/.config/brave-flags.conf"
 }
 
+### Actual script
 # Install dialog to choose some stuff
 command -v dialog || { errmsg "Cannot go on without dialog"; exit 1; }
 
