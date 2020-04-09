@@ -38,7 +38,7 @@ setMirrors() {
 installNerdFonts() {
   out=$( mktemp -d )
   git clone https://github.com/ryanoasis/nerd-fonts.git "$out"
-  /usr/bin/env bash -c "$out/install.sh --complete" || err "Fonts not installed correctly"
+  bash -c "$out/install.sh --complete" || err "Fonts not installed correctly"
   rm -rf "$out"
 }
 
