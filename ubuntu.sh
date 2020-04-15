@@ -13,9 +13,7 @@ YEL='\e[1;33m'
 RED='\e[31m'
 NCL='\e[0m'
 
-### Outputs functions
-mss() { printf "${CYA}%s${NCL}\\n" "$1"; }
-war() { printf "${YEL}%s${NCL}\\n" "$1"; }
+### Errors
 errmsg() { printf "${RED}%s${NCL}\\n" "$1"; } 
 err() { errmsg "$1"; return 1; }
 
@@ -57,7 +55,7 @@ installAlacritty() {
 # Use xterm as default?
 installXterm() {
   installpkg xterm || err "Unable to install xterm"
-  for i in /home/*; do cp ./resources/.Xresources "$i"; done && mss "Restart (or logout) required"
+  for i in /home/*; do cp ./resources/.Xresources "$i"; done && errmsg "Restart (or logout) required"
 }
 
 # Visual Studio Code installation
