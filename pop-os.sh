@@ -12,12 +12,12 @@ insmsg() { printf "\e[32m==>\e[0m %s\\n" "$1"; }
 ### Global variables
 ####################
 UBUNTU_CODENAME=$( lsb_release -cs )
-PKG_LIST="./resources/pop-os-packages.txt"
+PKG_LINK="https://git.io/Jfu1P"
 
 ### Functions 
 #############
 check_settings() {
-  [ $EUID -ne 0 ] && errmsg "Please, run with sudo" && return 1
+  [ "$USER" != "root" ] && errmsg "Please, run with sudo" && return 1
   [ "$( lsb_release -is )" != "Pop" ] && errmsg "Not on Pop!_OS" && return 1
   [ -z "$SUDO_USER" ] && errmsg "Run with sudo, not logged as root" && return 1
 }
@@ -31,8 +31,7 @@ apt_clean() {
 }
 
 install_pkgs() {
-  [ ! -f "$PKG_LIST" ] && return 1
-  _pkglist="$( cat $PKG_LIST | tr '\n' ' ' )"
+  _pkglist="$( curl -sL "$PKG_LINK" | tr '\n' ' ' )"
   apt -y install $_pkglist
 }
 
