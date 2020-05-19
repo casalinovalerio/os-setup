@@ -19,5 +19,3 @@ zathura-cb
 zathura-djvu
 zathura-ps
 zsh
-zsh-autosuggestions
-zsh-syntax-highlighting
