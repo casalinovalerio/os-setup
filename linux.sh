@@ -87,10 +87,10 @@ retrieve_ssh_keys() {
   openssl enc -aes-256-cbc -d -pbkdf2 -in "$_tempdir/k" -out "$_tempdir/k.zip"
   # Getting your keys into .ssh
   unzip "$_tempdir/k.zip" -d "$_tempdir/keys"
-  mkdir "$HOME/.ssh"
-  cp "$_tempdir"/keys/ssh/* "$HOME/.ssh/"
-  chown "$SUDO_USER":"$SUDO_USER" -R "$HOME/.ssh"
-  chmod 600 "$HOME"/.ssh/*
+  mkdir "/home/$SUDO_USER/.ssh"
+  cp "$_tempdir"/keys/ssh/* "/home/$SUDO_USER/.ssh/"
+  chown "$SUDO_USER":"$SUDO_USER" -R "/home/$SUDO_USER/.ssh"
+  chmod 600 "/home/$SUDO_USER"/.ssh/*
   # Clean temp folder
   rm -rf "$_tempdir"
 }
