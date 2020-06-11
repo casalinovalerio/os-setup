@@ -37,18 +37,18 @@ find_distro() {
 }
 
 assign_pkglist() {
-  case "$OS" in
-    Ubuntu) _pkglink="$_ubuntu" && _pkgmanager="apt"    ;;
-    Pop)    _pkglink="$_popos"  && _pkgmanager="apt"    ;;
-    WSL)    _pkglink="$_wsl"    && _pkgmanager="apt"    ;;
-    Arch)   _pkglink="$_arch"   && _pkgmanager="pacman" ;;
-    *)      errmsg "Unsupported distro" && return 1     ;;
+  case "${OS/ //g}" in
+    Ubuntu)              _pkglink="$_ubuntu" && _pkgmanager="apt"    ;;
+    Pop)                 _pkglink="$_popos"  && _pkgmanager="apt"    ;;
+    WSL)                 _pkglink="$_wsl"    && _pkgmanager="apt"    ;;
+    Arch|ManjaroLinux)   _pkglink="$_arch"   && _pkgmanager="pacman" ;;
+    *)                   errmsg "Unsupported distro" && return 1     ;;
   esac
 }
   
 update() {
-  [ "$_pkgmanager" = "apt" ] \
-    && ( apt -y update && apt -y full-upgrade || return 1 ) 2>/dev/null
+[ "$_pkgmanager" = "apt" ] \
+&& ( apt -y update && apt -y full-upgrade || return 1 ) 2>/dev/null
   [ "$_pkgmanager" = "pacman" ] \
       && ( pacman --noconfirm -Syyu || return 1 ) 2>/dev/null
 }

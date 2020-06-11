@@ -1,10 +1,1 @@
-chromium
-cmake
-curl
-docker
-gcc
-g++
-git
-make
-neovim
-zsh
+28
