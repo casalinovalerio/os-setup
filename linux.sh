@@ -141,6 +141,6 @@ insmsg "Updating [updater()]" && updater || exit 1
 insmsg "Installing [install_pkgs()]" && install_pkgs || exit 1
 insmsg "Setup home [myhome_setup()]" && myhome_setup
 [ "$_pkgmanager" = "pacman" ] && insmsg "Blackarch? Install pkgs" && blackarch
-insmsg "Cleaning [cleaner()]" && apt_clean
+insmsg "Cleaning [cleaner()]" && cleaner
 
 printf "It is done!!"
