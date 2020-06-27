@@ -128,6 +128,13 @@ blackarch() {
     || { errmsg "Error in installation" && return 1; }
 }
 
+aur_helper() {
+  git clone "https://aur.archlinux.org/yay" /opt/yay
+  chown "$SUDO_USER":"$SUDO_USER" -R /opt/yay
+  cd /opt/yay
+  sudo -u "$SUDO_USER" makepkg -si
+}
+
 ### Actual script
 #################
 printf "Welcome to this installation!\\n" 
@@ -139,6 +146,7 @@ check_settings && find_distro && assign_pkglist || exit 1
 # Acual modifications
 insmsg "Updating [updater()]" && updater || exit 1
 insmsg "Installing [install_pkgs()]" && install_pkgs || exit 1
+[ "$_pkgmanager" = "pacman" ] && aur_helper 
 insmsg "Setup home [myhome_setup()]" && myhome_setup
 [ "$_pkgmanager" = "pacman" ] && insmsg "Blackarch? Install pkgs" && blackarch
 insmsg "Cleaning [cleaner()]" && cleaner
