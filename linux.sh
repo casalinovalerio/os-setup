@@ -2,8 +2,7 @@
 ###############################################################################
 ### Author:       Valerio Casalino                                          ###
 ### Description:  Install basic software and workflow                       ###
-### TODO:         - Add AUR helper for arch                                 ###
-###               - Add installers for apckages not in repos                ###
+### TODO:         - Add installers for apckages not in repos                ###
 ###               - Do more testing                                         ###
 ###############################################################################
 
