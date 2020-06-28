@@ -21,7 +21,7 @@ _ubuntu="apt-transport-https chromium-browser cmake curl docker.io g++ gcc git \
 _wsl="cmake curl g++ git gnupg imagemagick neovim pandoc tmux wkhtmltopdf zsh"
 _arch="alacritty android-tools android-udev cmake docker firefox gcc gimp jq \
   make neovim r sxiv tmux tor torsocks unzip virtualbox xclip zathura zip \
-  zathura-pdf-poppler"
+  zathura-pdf-poppler fakeroot"
 _blackarch="burpsuite chankro crackmapexec ffuf gobuster hashid joomlascan \
   msfdb wfuzz wordlistctl"
 _keylink="https://strap.casalinovalerio.com/keys.crypt"
@@ -57,7 +57,7 @@ update() {
   [ "$_pkgmanager" = "apt" ] \
     && ( apt -y update && apt -y full-upgrade || return 1 ) 2>/dev/null
   [ "$_pkgmanager" = "pacman" ] \
-      && ( pacman --noconfirm -Syyu || return 1 ) 2>/dev/null
+    && ( pacman --noconfirm -Syyu || return 1 ) 2>/dev/null
 }
 
 updater() {
@@ -91,10 +91,8 @@ retrieve_ssh_keys() {
     || { errmsg "Couldn't download keys" && return 1; }
   openssl enc -aes-256-cbc -d -pbkdf2 -in "$_tempdir/k" -out "$_tempdir/k.zip"
   unzip "$_tempdir/k.zip" -d "$_tempdir/keys"
-  mkdir "/home/$SUDO_USER/.ssh"
-  cp "$_tempdir"/keys/.ssh/* "/home/$SUDO_USER/.ssh/"
+  cp -R "$_tempdir/keys/.ssh/" "/home/$SUDO_USER/.ssh/"
   chown "$SUDO_USER":"$SUDO_USER" -R "/home/$SUDO_USER/.ssh"
-  chmod 600 "/home/$SUDO_USER"/.ssh/*
   rm -rf "$_tempdir"
 }
 
