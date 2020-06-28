@@ -113,6 +113,7 @@ myhome_setup() {
   sudo -u "$SUDO_USER" \
     git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" \
     submodule update
+  chsh "$SUDO_USER" -s /bin/zsh
 }
 
 want_blackarch() {
