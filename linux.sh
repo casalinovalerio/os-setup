@@ -108,9 +108,9 @@ myhome_setup() {
   sudo -u "$SUDO_USER" git clone --bare --recurse-submodules "$_myhome_ssh" "$_myhome_pwd"
   chown "$SUDO_USER":"$SUDO_USER" -R "$_myhome_pwd"
   rm "${_myhome_usr}/.profile"
-  git_myhome checkout -f master
-  git_myhome submodule init
-  git_myhome submodule update
+  sudo -u "$SUDO_USER" git_myhome checkout -f master
+  sudo -u "$SUDO_USER" git_myhome submodule init
+  sudo -u "$SUDO_USER" git_myhome submodule update
 }
 
 want_blackarch() {
@@ -136,7 +136,7 @@ aur_helper() {
 
 ### Actual script
 #################
-printf "Welcome to this installation!\\n" 
+insmsg "Welcome to this installation!" 
 
 check_settings && find_distro && assign_pkglist || exit 1
 [ "$_pkgmanager" = "pacman" ] && insmsg "Install Blackarch?" && want_blackarch
@@ -147,4 +147,4 @@ insmsg "Setup home [myhome_setup()]" && myhome_setup
 [ "$_pkgmanager" = "pacman" ] && insmsg "Blackarch? Install pkgs" && blackarch
 insmsg "Cleaning [cleaner()]" && cleaner
 
-printf "It is done!!"
+insmsg "It is done!!"
