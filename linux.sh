@@ -77,7 +77,7 @@ cleaner() {
 
 install_pkgs() {
   [ "$_pkgmanager" = "apt" ] && apt -y install $@
-  [ "$_pkgmanager" = "pacman" ] && pacman --noconfirm -S $@
+  [ "$_pkgmanager" = "pacman" ] && pacman --noconfirm --needed -S $@
 } 
 
 installer() {
@@ -103,11 +103,10 @@ myhome_setup() {
   _myhome_pwd="$_myhome_usr/.myhome"
   sudo -u "$SUDO_USER" \
     git clone --bare --recurse-submodules "$_myhome_ssh" "$_myhome_pwd"
-  chown "$SUDO_USER":"$SUDO_USER" -R "$_myhome_pwd"
-  rm "${_myhome_usr}/.profile"
   sudo -u "$SUDO_USER" \
     git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" \
     checkout -f master
+  sleep 5
   sudo -u "$SUDO_USER" \
     git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" \
     submodule init
