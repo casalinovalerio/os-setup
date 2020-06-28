@@ -104,17 +104,12 @@ myhome_setup() {
   sudo -u "$SUDO_USER" \
     git clone --bare --recurse-submodules "$_myhome_ssh" "$_myhome_pwd"
   sudo -u "$SUDO_USER" \
-    git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" \
+    git --work-tree="$_myhome_usr" --git-dir="$_myhome_pwd" \
     checkout -f master
+  cd "$_myhome_usr"
   sudo -u "$SUDO_USER" \
-    git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" \
-    worktree add "$_myhome_pwd" master
-  sudo -u "$SUDO_USER" \
-    git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" \
-    submodule init
-  sudo -u "$SUDO_USER" \
-    git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" \
-    submodule update
+    git --work-tree="$_myhome_usr" --git-dir="$_myhome_pwd" \
+    submodule update --init --recursive
   chsh "$SUDO_USER" -s /bin/zsh
 }
 
