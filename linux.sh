@@ -44,7 +44,7 @@ find_distro() {
 }
 
 assign_pkglist() {
-  case "${OS/ /}" in
+  case "$( printf "%s" "$OS" | sed "s/ //g" )" in
     Ubuntu)              _pkglink="$_ubuntu" && _pkgmanager="apt"    ;;
     Pop)                 _pkglink="$_popos"  && _pkgmanager="apt"    ;;
     WSL)                 _pkglink="$_wsl"    && _pkgmanager="apt"    ;;
