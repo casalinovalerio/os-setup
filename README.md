@@ -1,6 +1,5 @@
 # os-setup
-Setup the OS I use with the tools I use. Maybe it will become a wizard-ish 
-repository... 🧙🔧
+Setup the OS I use with the tools I use. 🔧
 
 **Supported Linux Distros** (so far):
 
@@ -8,6 +7,7 @@ repository... 🧙🔧
 + Pop!\_OS
 + Ubuntu WSL (Windows Subsystem for Linux)
 + Arch Linux
++ Manjaro Linux
 
 ## Quick deploy
 
