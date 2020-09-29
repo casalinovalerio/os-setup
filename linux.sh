@@ -24,7 +24,6 @@ _arch="alacritty android-tools android-udev cmake docker firefox gcc gimp jq \
   zathura-pdf-poppler fakeroot"
 _blackarch="burpsuite chankro crackmapexec ffuf gobuster hashid joomlascan \
   msfdb wfuzz wordlistctl"
-_keylink="https://strap.casalinovalerio.com/keys.crypt"
 
 ### Functions 
 #############
@@ -86,14 +85,7 @@ installer() {
 }
 
 retrieve_ssh_keys() {
-  _tempdir=$( mktemp -d )
-  wget "$_keylink" -O "$_tempdir/k" \
-    || { errmsg "Couldn't download keys" && return 1; }
-  openssl enc -aes-256-cbc -d -pbkdf2 -in "$_tempdir/k" -out "$_tempdir/k.zip"
-  unzip "$_tempdir/k.zip" -d "$_tempdir/keys"
-  cp -R "$_tempdir/keys/.ssh/" "/home/$SUDO_USER/.ssh/"
-  chown "$SUDO_USER":"$SUDO_USER" -R "/home/$SUDO_USER/.ssh"
-  rm -rf "$_tempdir"
+  rsync keys@ssh.casalinovalerio.com:"~/.ssh/*" "/home/$SUDO_USER/.ssh"
 }
 
 myhome_setup() {
