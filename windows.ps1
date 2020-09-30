@@ -432,8 +432,6 @@ If ((Get-CimInstance -Class "Win32_OperatingSystem").ProductType -eq 1) {
 
 Write-Output "Installing Linux Subsystem..."
 Enable-WindowsOptionalFeature -Online -FeatureName "Microsoft-Windows-Subsystem-Linux" -NoRestart -WarningAction SilentlyContinue | Out-Null
-Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
-Add-AppxPackage .\Ubuntu.appx
 
 Write-Output "Removing Default Fax Printer..."
 Remove-Printer -Name "Fax" -ErrorAction SilentlyContinue
