@@ -14,11 +14,11 @@ Setup the OS I use with the tools I use. 🔧
 Linux:
 
 ```bash
-curl -sSLf "https://strap.casalinovalerio.com/linux.sh" | sudo sh
+curl -sSLf "https://strap.casali.no/linux.sh" | sudo sh
 ```
 
 Windows 10:
 
 ```powershell
-iex ((New-Object System.Net.WebClient).DownloadString('https://strap.casalinovalerio.com/windows.ps1'))
+iex ((New-Object System.Net.WebClient).DownloadString('https://strap.casali.no/windows.ps1'))
 ```
