@@ -85,7 +85,7 @@ clean() {
 }
 cleaner() { clean 2>/dev/null || { errmsg "Couldn't clean" && return 1; }; }
 
-install_pkgs() {
+install() {
     case "$_pkgmanager" in
         "apt")
             apt -y install $@
@@ -100,7 +100,7 @@ install_pkgs() {
 } 
 
 installer() {
-  install_pkgs "$_pkglink" || { errmsg "Error in installation" && return 1; } 
+    install "$_pkglink" || { errmsg "Error in installation" && return 1; } 
 }
 
 myhome() { 
