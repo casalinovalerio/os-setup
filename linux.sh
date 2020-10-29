@@ -103,15 +103,11 @@ installer() {
   install_pkgs "$_pkglink" || { errmsg "Error in installation" && return 1; } 
 }
 
-retrieve_ssh_keys() {
-  rudo rsync keys@ssh.casalinovalerio.com:"~/.ssh/*" "/home/$SUDO_USER/.ssh"
-}
-
 myhome() { 
     git --work-tree="/home/$SUDO_USER" --git-dir="/home/$SUDO_USER/.myhome" $@
 }
+
 myhome_setup() {
-  retrieve_ssh_keys || return 1
   _myhome_ssh="github.com:casalinovalerio/.myhome"
   _myhome_usr="/home/$SUDO_USER"
   _myhome_pwd="$_myhome_usr/.myhome"
