@@ -56,35 +56,51 @@ assign_pkglist() {
 }
   
 update() {
-  [ "$_pkgmanager" = "apt" ] \
-    && ( apt -y update && apt -y full-upgrade || return 1 ) 2>/dev/null
-  [ "$_pkgmanager" = "pacman" ] \
-    && ( pacman --noconfirm -Syyu || return 1 ) 2>/dev/null
+    case "$_pkgmanager" in
+        "apt")
+            apt -y update && apt -y full-upgrade || return 1 
+            ;;
+        "pacman")
+            pacman --noconfirm -Syyu || return 1
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
-
-updater() {
-  update || { errmsg "Couldn't update" && return 1; }
-}
+updater() { update 2>/dev/null || { errmsg "Couldn't update" && return 1; }; }
 
 clean() {
-  [ "$_pkgmanager" = "apt" ] \
-    && ( apt -y autoremove && apt -y autoclean || return 1 ) 2>/dev/null
-  [ "$_pkgmanager" = "pacman" ] \
-    && ( pacman --noconfirm -Sc || return 1 ) 2>/dev/null
+    case "$_pkgmanager" in
+        "apt")
+            apt -y autoremove && apt -y autoclean || return 1 
+            ;;
+        "pacman")
+            pacman --noconfirm -Sc || return 1 
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
-
-cleaner() {
-  clean || { errmsg "Couldn't clean" && return 1; }
-}
+cleaner() { clean 2>/dev/null || { errmsg "Couldn't clean" && return 1; }; }
 
 install_pkgs() {
-  [ "$_pkgmanager" = "apt" ] && apt -y install $@
-  [ "$_pkgmanager" = "pacman" ] && pacman --noconfirm --needed -S $@
+    case "$_pkgmanager" in
+        "apt")
+            apt -y install $@
+            ;;
+        "pacman")
+            pacman --noconfirm --needed -S $@
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 } 
 
 installer() {
-  install_pkgs "$_pkglink" \
-    || { errmsg "Error in installation" && return 1; } 
+  install_pkgs "$_pkglink" || { errmsg "Error in installation" && return 1; } 
 }
 
 retrieve_ssh_keys() {
